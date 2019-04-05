@@ -2,13 +2,13 @@
 import time
 import requests
 import smtplib
-from config import *
+from custom_config import *
 import tweepy
 from datetime import datetime
 from twilio.rest import Client
 
 
-def send_email(user, pwd, recipient):  # snippet courtesy of david / email sending function
+def send_email(user, pwd, recipient, url):  # snippet courtesy of david / email sending function
     SUBJECT = 'SITE UPDATED'  # message subject
     body = 'CHANGE AT ' + str(url)  # message body
     gmail_user = user
@@ -49,6 +49,7 @@ def sendtext(message):
         twilioCli.messages.create(body=message, from_=twilioNumber, to=myNumber)
     except Exception, e:
         print "[-]Error " + e
+    print("Sent text message")
 
 
 def main():
@@ -82,7 +83,7 @@ def main():
                     message = status_string
                     print "[+]" + status_string
                     if notify:
-                        send_email(user, pwd, recipient)  # send notification email
+                        send_email(user, pwd, recipient, url)  # send notification email
                     else:
                         pass
                     if tweet:
@@ -91,8 +92,7 @@ def main():
                         pass
                     if text:
                         sendtext(message)
-                    print '\n[+]Retrieving new base page and restarting\n'
-                    main()
+                    time.sleep(4800)
 
 
 if __name__ == '__main__':
